@@ -29,14 +29,21 @@ export async function checkExistAndTrySyncWithSource(opt: CMDOptions) {
 			albumId: BTNEWS.WECHAT_MP_ALBUM_ID,
 		},
 	)
-	if(isDebugging()) {
-		fs.writeFileSync('source.html', html)
-	}
 	const url = $('meta[property="og:url"]').attr()?.['content'] || opt.url
+
 	const title = $('#activity-name').text().trim()
 		|| $('meta[property="og:title"]').attr()?.['content']?.trim()
 		|| $('meta[property="twitter:title"]').attr()?.['content']?.trim()
 		|| undefined
+	if(isDebugging()) {
+		fs.writeFileSync('source.html', html)
+		logger.info(`Checking title: ${$('#activity-name').text().trim()}`)
+		logger.info(`Checking og:title: ${$('meta[property="og:title"]').attr()?.['content']?.trim()}`)
+		logger.info(`Checking twitter:title: ${$('meta[property="twitter:title"]').attr()?.['content']?.trim()}`)
+		logger.info(`input title: ${opt.title}`)
+		logger.info(`title: ${title}`)
+	}
+
 	const publishedTime = $('#publish_time').text().trim() || date
 	const fm = await extractFrontMatter({
 		title: opt?.title ?? title,
