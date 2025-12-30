@@ -51,14 +51,21 @@ export async function extractArticle(opt: GetArticleOptions) {
 	}
 
 	const { md, $ } = await wechatMPHtml2md(html, { onUrl, onImage })
-	const title = $('#activity-name').text().trim() || undefined
+	const title = $('#activity-name').text().trim()
+		|| $('meta[property="og:title"]').attr()?.['content']
+  	|| $('meta[property="twitter:title"]').attr()?.['content']
+	  || undefined
+
+	const url = $('meta[property="og:url"]').attr()?.['content'] || (typeof opt === 'string' && opt)
 	const publishedTime = $('#publish_time').text().trim() || date
-	logger.info(`html:\n${html}`)
+	// logger.info(`html:\n${html}`)
 	logger.info(`content:\n${md}`)
 	logger.info(`title:\n${title}`)
 	logger.info(`publishedTime:\n${publishedTime}`)
 
 	return {
+		html,
+		url,
 		markdown: md,
 		cheerioAPI: $,
 		urls,
