@@ -48,7 +48,7 @@ jobs:
           echo "S3_ACCESS_KEY_ID=${{ secrets.S3_ACCESS_KEY_ID }}" >> .env
           echo "S3_SECRET_ACCESS_KEY=${{ secrets.S3_SECRET_ACCESS_KEY }}" >> .env
           echo "S3_RESOURCE_URL=${{ secrets.S3_RESOURCE_URL }}" >> .env
-          echo "GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> .env
+          echo "GITHUB_TOKEN=${{ secrets.PAT }}" >> .env
           cat .env
       - name: run script
         id: fetch
