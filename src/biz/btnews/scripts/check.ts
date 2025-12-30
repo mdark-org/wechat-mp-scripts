@@ -9,8 +9,6 @@ import process from 'node:process'
 import { getFileContent } from '~/platforms/github/get-content.ts'
 import { CMDOptions } from '~/biz/btnews/scripts/type.ts'
 import { s3Saver } from '~/index.ts'
-import * as fs from "node:fs";
-import {isDebugging} from "~/utils/set-action-output.ts";
 const WECHAT_MP_KEY = 'wx_mp'
 const ghSaver = createGithubFileSaver({
 	provider: 'github',
@@ -23,31 +21,15 @@ const ghSaver = createGithubFileSaver({
 const logger = getLogger(import.meta.filename)
 
 export async function checkExistAndTrySyncWithSource(opt: CMDOptions) {
-	const { markdown, urls, images, cheerioAPI: $, html, date } = await extractArticle(
+	const { markdown, urls, images, cheerioAPI: $, html, metadata } = await extractArticle(
 		opt.url ?? {
 			bizId: BTNEWS.WECHAT_MP_BIZ_ID,
 			albumId: BTNEWS.WECHAT_MP_ALBUM_ID,
 		},
 	)
-	const url = $('meta[property="og:url"]').attr()?.['content'] || opt.url
-
-	const title = $('#activity-name').text().trim()
-		|| $('meta[property="og:title"]').attr()?.['content']?.trim()
-		|| $('meta[property="twitter:title"]').attr()?.['content']?.trim()
-		|| undefined
-	if(isDebugging()) {
-		fs.writeFileSync('source.html', html)
-		logger.info(`Checking title: ${$('#activity-name').text().trim()}`)
-		logger.info(`Checking og:title: ${$('meta[property="og:title"]').attr()?.['content']?.trim()}`)
-		logger.info(`Checking twitter:title: ${$('meta[property="twitter:title"]').attr()?.['content']?.trim()}`)
-		logger.info(`input title: ${opt.title}`)
-		logger.info(`title: ${title}`)
-	}
-
-	const publishedTime = $('#publish_time').text().trim() || date
 	const fm = await extractFrontMatter({
-		title: opt?.title ?? title,
-		date: publishedTime,
+		title: opt?.title ?? metadata.title,
+		date: metadata.publishedTime,
 		bv: opt.bv,
 		yt: opt.yt,
 	})

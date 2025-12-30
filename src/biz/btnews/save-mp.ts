@@ -25,27 +25,17 @@ export const BTNEWS = {
 const logger = getLogger(import.meta.filename)
 
 export const save = async (opt: Option) => {
-	const { markdown, urls, images, date, cheerioAPI: $ } = await extractArticle(
+	const { markdown, urls, images, metadata, cheerioAPI: $ } = await extractArticle(
 		opt.url ?? {
 			bizId: BTNEWS.WECHAT_MP_BIZ_ID,
 			albumId: BTNEWS.WECHAT_MP_ALBUM_ID,
 		},
 	)
-	const url = $('meta[property="og:url"]').attr()?.['content'] || opt.url
-	const title = $('#activity-name').text().trim()
-		|| $('meta[property="og:title"]').attr()?.['content']
-		|| $('meta[property="twitter:title"]').attr()?.['content']
-		|| undefined
-
-	const publishedTime = $('#publish_time').text().trim() || date
-	logger.info(`content:\n${markdown}`)
-	logger.info(`title:\n${title}`)
-	logger.info(`publishedTime:\n${publishedTime}`)
 	const imageSaver = createImageSaver({ saver: opt.imageSaver })
 
 	const fm = await extractFrontMatter({
-		title: opt.title ?? title,
-		date: opt.date ?? publishedTime,
+		title: opt.title ?? metadata.title,
+		date: opt.date ?? metadata.publishedTime,
 		bv: opt.bv,
 		yt: opt.yt,
 	})
