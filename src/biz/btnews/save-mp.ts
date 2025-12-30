@@ -31,9 +31,6 @@ export const save = async (opt: Option) => {
 			albumId: BTNEWS.WECHAT_MP_ALBUM_ID,
 		},
 	)
-	logger.info(`fetched:\n${markdown}`)
-	logger.info(`title:\n${title}`)
-	logger.info(`publishedTime:\n${publishedTime}`)
 	const imageSaver = createImageSaver({ saver: opt.imageSaver })
 
 	const fm = await extractFrontMatter({

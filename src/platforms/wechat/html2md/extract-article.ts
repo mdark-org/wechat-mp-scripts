@@ -2,12 +2,16 @@ import { GetArticleOptions, getMpArticleFromAlbum, getMPArticleHTML } from '../a
 import { wechatMPHtml2md } from './index.ts'
 import { getPlainHtml } from '~/shared/get-html.ts'
 import dayjs from 'dayjs'
+import {getLogger} from "~/utils/logger.ts";
 
 export type ResourceItem = {
 	count: number
 	placeholder: string
 	url: string
 }
+
+const logger = getLogger(import.meta.filename)
+
 export async function extractArticle(opt: GetArticleOptions) {
 	let html: string
 	let date: string
@@ -49,6 +53,11 @@ export async function extractArticle(opt: GetArticleOptions) {
 	const { md, $ } = await wechatMPHtml2md(html, { onUrl, onImage })
 	const title = $('#activity-name').text().trim() || undefined
 	const publishedTime = $('#publish_time').text().trim() || date
+	logger.info(`html:\n${html}`)
+	logger.info(`content:\n${md}`)
+	logger.info(`title:\n${title}`)
+	logger.info(`publishedTime:\n${publishedTime}`)
+
 	return {
 		markdown: md,
 		cheerioAPI: $,
