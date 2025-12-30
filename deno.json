@@ -1,8 +1,24 @@
 {
-  "tasks": {
-    "dev": "deno run src/index.ts"
-  },
   "imports": {
+    "@std/cli": "jsr:@std/cli@^1.0.25",
     "~/": "./src/"
+},
+  "tasks": {
+    "try-sync-latest-mp-content": "deno run --env-file --allow-all src/biz/btnews/scripts/index.ts --task=try-sync-latest-mp-content"
+  },
+  "lint": {
+    "rules": {
+      "exclude": [
+        "no-unused-vars"
+      ]
+    }
+  },
+  "fmt": {
+    "useTabs": true,
+    "lineWidth": 100,
+    "semiColons": false,
+    "singleQuote": true,
+    "proseWrap": "preserve",
+    "include": ["src/**"]
   }
 }

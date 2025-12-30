@@ -1,26 +1,19 @@
 {
-  "name": "getarticle",
+  "name": "wechat-mp-scripts",
   "version": "1.0.0",
-  "description": "",
   "scripts": {
-    "fetch": "deno ./main.ts",
-    "gh-fetch": "deno --env-file=.env ."
+    "try-sync-latest-mp-content": "deno run --env-file --allow-all src/biz/btnews/scripts/index.ts --task=try-sync-latest-mp-content"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "@actions/core": "^1.11.1",
     "@types/cheerio": "^0.22.35",
     "cheerio": "1.1.2",
-    "commander": "^14.0.2",
     "dayjs": "^1.11.19",
-    "dotenv": "^17.2.3",
+    "pino": "^10.1.0",
     "sharp": "^0.34.5",
     "ofetch": "^2.0.0-alpha.3",
     "zod": "^4.2.1",
     "aws4fetch": "^1.0.20",
-    "unstorage": "^1.17.3",
     "p-limit": "^7.2.0",
     "glob": "^13.0.0",
     "gray-matter": "^4.0.3"

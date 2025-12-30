@@ -1,1 +1,1 @@
-export * from './html2md'
+export * from './html2md/index.ts'
