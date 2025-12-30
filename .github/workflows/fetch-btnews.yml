@@ -14,7 +14,7 @@ on:
         description: "specific url to fetch"
         default: ""
         required: false
-      overwrute:
+      overwrite:
         description: "overwrite"
         default: ""
         required: false
