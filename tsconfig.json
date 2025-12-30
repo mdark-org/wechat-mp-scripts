@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    "module": "esnext",
+    "composite": true,
+    "incremental": true,
+    "noEmit": true,
+    "jsx": "preserve",
+    "target": "esnext",
+    "moduleResolution": "bundler",
+    "experimentalDecorators": true,
+    "allowImportingTsExtensions": true,
+    "types": [
+      "@types/deno"
+    ],
+    "paths": {
+      "~/*": [
+        "./src/*"
+      ]
+    }
+  },
+  "include": [
+    "**/*.ts",
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+}
