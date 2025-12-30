@@ -52,4 +52,4 @@ jobs:
           cat .env
       - name: run script
         id: fetch
-        run: deno task try-sync-latest-mp-content --bv=${{ github.event.inputs.bvid }} --yt=${{ github.event.inputs.ytid }} --url=${{ github.event.inputs.url }} ${{ github.event_name == 'workflow_dispatch' && '-o' || '' }} ${{ github.event.inputs.overwrite }} --ghac --title ${{ github.event.inputs.title }} --path=${{ github.event.inputs.path }} --overwrite=${{ github.event.inputs.overwrite }}
+        run: deno task try-sync-latest-mp-content --bv=${{ github.event.inputs.bvid }} --yt=${{ github.event.inputs.ytid }} --url=${{ github.event.inputs.url }} --title ${{ github.event.inputs.title }} --path=${{ github.event.inputs.path }} --overwrite=${{ github.event.inputs.overwrite }}

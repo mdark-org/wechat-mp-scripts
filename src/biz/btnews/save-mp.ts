@@ -1,14 +1,12 @@
-import { extractArticle } from '../../platforms/wechat/html2md/index.ts'
-import getURLTitle from '~/utils/get-page-title.ts'
+import { extractArticle } from '~/platforms/wechat/html2md/index.ts'
 import { extractFrontMatter } from './front-matter.btnews.ts'
 import { setActionOutput } from '~/utils/set-action-output.ts'
-import { createImageSaver } from '../../image/index.ts'
+import { createImageSaver } from '~/image/index.ts'
 import { indexToRange } from '~/utils/index-to-range.ts'
-import { formatFrontMatter } from '~/utils/frontmatter.ts'
-import { FileSaver } from '../../file/index.ts'
+import { FileSaver } from '~/file/index.ts'
 import { saveWechatMPArticle } from '~/platforms/wechat/html2md/save.ts'
-import { GetArticleOptions } from '~/platforms/wechat/api/fetch-article.ts'
 import matter from 'gray-matter'
+import {getLogger} from "~/utils/logger.ts";
 
 export type Option = {
 	title?: string
@@ -24,6 +22,8 @@ export const BTNEWS = {
 	WECHAT_MP_ALBUM_ID: '3119370632720400390',
 }
 
+const logger = getLogger(import.meta.filename)
+
 export const save = async (opt: Option) => {
 	const { markdown, urls, images, title, publishedTime } = await extractArticle(
 		opt.url ?? {
@@ -31,7 +31,9 @@ export const save = async (opt: Option) => {
 			albumId: BTNEWS.WECHAT_MP_ALBUM_ID,
 		},
 	)
-
+	logger.info(`fetched:\n${markdown}`)
+	logger.info(`title:\n${title}`)
+	logger.info(`publishedTime:\n${publishedTime}`)
 	const imageSaver = createImageSaver({ saver: opt.imageSaver })
 
 	const fm = await extractFrontMatter({
