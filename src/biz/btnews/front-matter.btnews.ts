@@ -37,7 +37,7 @@ export async function extractFrontMatter(
 	const indexPattern = /\d{1,4}(\.5)?/
 	let index = sourceTitle.match(indexPattern)?.['0']
 	if (index == null) {
-		index = null
+		index = '0'
 		if (!option.title) {
 			logger.error(`标题格式错误:${sourceTitle}，无法提取索引`)
 		}

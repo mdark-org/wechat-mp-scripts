@@ -53,3 +53,10 @@ jobs:
       - name: run script
         id: fetch
         run: deno task try-sync-latest-mp-content --bv=${{ github.event.inputs.bvid }} --yt=${{ github.event.inputs.ytid }} --url=${{ github.event.inputs.url }} --title ${{ github.event.inputs.title }} --path=${{ github.event.inputs.path }} --overwrite=${{ github.event.inputs.overwrite }}
+      - name: Upload debug artifact
+        if: failure() && steps.fetch.outcome == 'failure' || runner.debug == '1'
+        uses: actions/upload-artifact@v4
+        with:
+          name: source-html
+          path: source.html
+          if-no-files-found: warn

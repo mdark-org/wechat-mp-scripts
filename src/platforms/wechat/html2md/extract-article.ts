@@ -14,7 +14,7 @@ const logger = getLogger(import.meta.filename)
 
 export async function extractArticle(opt: GetArticleOptions) {
 	let html: string
-	let date: string
+	let date: string | undefined = undefined
 	if (typeof opt === 'string') {
 		html = await getPlainHtml(opt)
 	} else {
@@ -51,26 +51,14 @@ export async function extractArticle(opt: GetArticleOptions) {
 	}
 
 	const { md, $ } = await wechatMPHtml2md(html, { onUrl, onImage })
-	const title = $('#activity-name').text().trim()
-		|| $('meta[property="og:title"]').attr()?.['content']
-  	|| $('meta[property="twitter:title"]').attr()?.['content']
-	  || undefined
 
-	const url = $('meta[property="og:url"]').attr()?.['content'] || (typeof opt === 'string' && opt)
-	const publishedTime = $('#publish_time').text().trim() || date
-	// logger.info(`html:\n${html}`)
-	logger.info(`content:\n${md}`)
-	logger.info(`title:\n${title}`)
-	logger.info(`publishedTime:\n${publishedTime}`)
 
 	return {
 		html,
-		url,
+		date,
 		markdown: md,
 		cheerioAPI: $,
 		urls,
 		images,
-		title,
-		publishedTime,
 	}
 }

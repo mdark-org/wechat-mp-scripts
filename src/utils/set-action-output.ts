@@ -14,3 +14,6 @@ export const setActionOutput: ActionFn = (key, value) => {
 		Object.keys(key).forEach((k) => ghac.setOutput(k, key[k]))
 	}
 }
+
+
+export const isDebugging = () => process.env.DEBUG || ghac.isDebug()
