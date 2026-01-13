@@ -66,7 +66,7 @@ type GetOption = {
 /**
  * fetch latest ${cnt} articles data from wechat mp
  */
-export const getArticleList = async (option: GetOption) => {
+export const getArticleList = async (option: GetOption):Promise<ArticleItem[]> =>  {
 	const res = await f('https://mp.weixin.qq.com/mp/appmsgalbum', {
 		query: {
 			action: 'getalbum',
@@ -89,7 +89,7 @@ export const getArticleList = async (option: GetOption) => {
 			msgId: it.msgid,
 			url: it.url,
 			title: it.title,
-			date: it.create_time,
+			date: parseInt(it.create_time) * 1000,
 			cover: it.cover_img_1_1,
 		}))
 	}
@@ -98,7 +98,16 @@ export const getArticleList = async (option: GetOption) => {
 		msgId: it.msgid,
 		url: it.url,
 		title: it.title,
-		date: it.create_time,
+		date: parseInt(it.create_time) * 1000,
 		cover: it.cover_img_1_1,
 	}]
+}
+
+export type ArticleItem = {
+	msgId: string,
+	url: string,
+	title: string,
+	// timestamp in millisecond
+	date: number,
+	cover: string,
 }

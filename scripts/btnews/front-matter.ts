@@ -1,7 +1,7 @@
 import dayjs from 'dayjs'
 import { getLogger } from '~/utils/logger.ts'
 import { getVideoDescription } from '~/platforms/bilibili/get-video-data.ts'
-import { BedtimeNewsFrontmatter } from './type.ts'
+import {indexToRange} from "~/utils/index-to-range.ts";
 
 type BtNewsOption = {
 	bv?: string
@@ -9,10 +9,24 @@ type BtNewsOption = {
 	title?: string
 	date?: string | number
 }
+
+export interface BedtimeNewsFrontMatter {
+	title: string
+	date: string
+	category?: string
+	description: string
+	tags: string[]
+	index: string
+	bvid?: string
+	ytid?: string
+	xgid?: string
+}
+
 const logger = getLogger(import.meta.filename)
+
 export async function extractFrontMatter(
 	option: BtNewsOption,
-): Promise<BedtimeNewsFrontmatter> {
+): Promise<BedtimeNewsFrontMatter> {
 	const sourceTitle = option.title
 	let date: null | string
 	try {
@@ -61,4 +75,25 @@ const categoryToPath = {
 	'讲点黑话': 'slang',
 	'高见': 'opinion',
 	'参考信息': 'refnews',
+}
+
+
+
+export const frontmatterToPath = (fm: BedtimeNewsFrontMatter) => {
+	let basepath = `btnews/${fm.category ?? 'unknown'}`
+	if (fm.index) {
+		basepath += `/${indexToRange(fm.index)}`
+	} else {
+		const year = fm.date.slice(0, 4)
+		const month = fm.date.slice(5, 7)
+		basepath += `/${year}/${month}`
+	}
+
+	const filename = `${fm.category}_${fm.index ?? fm.date?.replaceAll('-', '_')}`
+	let filepath = `docs/${basepath}/${filename}.md`
+
+	// if (opt.path) {
+	// 	filepath = opt.path
+	// }
+	return { filepath, basepath, filename }
 }

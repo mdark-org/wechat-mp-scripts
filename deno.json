@@ -4,7 +4,7 @@
     "~/": "./src/"
 },
   "tasks": {
-    "try-sync-latest-mp-content": "deno run --env-file --allow-all src/biz/btnews/scripts/index.ts --task=try-sync-latest-mp-content"
+    "try-sync-latest-mp-content": "deno run --env-file --allow-all scripts/btnews/scripts/index.ts --task=try-sync-latest-mp-content"
   },
   "lint": {
     "rules": {

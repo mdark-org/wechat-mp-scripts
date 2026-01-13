@@ -1,5 +1,5 @@
 import { extractArticle } from '~/platforms/wechat/html2md/index.ts'
-import { extractFrontMatter } from './front-matter.btnews.ts'
+import {BedtimeNewsFrontMatter, extractFrontMatter} from './front-matter.ts'
 import { setActionOutput } from '~/utils/set-action-output.ts'
 import { createImageSaver } from '~/image/index.ts'
 import { indexToRange } from '~/utils/index-to-range.ts'
@@ -23,7 +23,6 @@ export const BTNEWS = {
 }
 
 const logger = getLogger(import.meta.filename)
-
 export const save = async (opt: Option) => {
 	const { markdown, urls, images, metadata, cheerioAPI: $ } = await extractArticle(
 		opt.url ?? {
@@ -39,14 +38,34 @@ export const save = async (opt: Option) => {
 		bv: opt.bv,
 		yt: opt.yt,
 	})
-
 	setActionOutput({
 		branch: `${fm.category}-${fm.index}`,
 		title: fm.title,
 		date: fm.date,
 		category: fm.category,
 	})
+	const { filepath, basepath, filename } = fmToPath(fm)
+	let processedMarkdown = await saveWechatMPArticle({
+		urls,
+		images,
+		getImageFilename: (item) => `${filename}_${item.count}`,
+		getImageBasepath: () => basepath,
+		imageSaver: imageSaver,
+		markdownSaver: opt.markdownSaver,
+		markdown: markdown,
+	})
+	processedMarkdown = processedMarkdown
+		.replace('**点击下图观看视频**', '')
+		.replace('点击下图观看视频', '')
+	const md = matter.stringify(processedMarkdown, fm)
+	await opt.markdownSaver(filepath, md)
+	return {
+		filepath,
+		markdown: md,
+	}
+}
 
+const fmToPath = (fm: BedtimeNewsFrontMatter) => {
 	const getBasepath = (_: typeof fm, withIndex: boolean) => {
 		let b = `btnews/${fm.category ?? 'unknown'}`
 		if (fm.index) {
@@ -60,30 +79,9 @@ export const save = async (opt: Option) => {
 		}
 		return b
 	}
+
 	const filename = `${fm.category}_${fm.index ?? fm.date?.replaceAll('-', '')}`
-
-	const basepath = getBasepath(fm, true)
 	const filepath = `${getBasepath(fm, false)}/${filename}.md`
-
-	let processedMarkdown = await saveWechatMPArticle({
-		urls,
-		images,
-		getImageFilename: (item) => `${filename}_${item.count}`,
-		getImageBasepath: () => basepath,
-		imageSaver: imageSaver,
-		markdownSaver: opt.markdownSaver,
-		markdown: markdown,
-	})
-
-	processedMarkdown = processedMarkdown
-		.replace('**点击下图观看视频**', '')
-		.replace('点击下图观看视频', '')
-	const md = matter.stringify(processedMarkdown, fm)
-
-	await opt.markdownSaver(filepath, md)
-
-	return {
-		filepath,
-		markdown: md,
-	}
+	const basepath = getBasepath(fm, true)
+	return { filepath, basepath, filename }
 }

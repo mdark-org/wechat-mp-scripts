@@ -2,7 +2,7 @@
   "name": "wechat-mp-scripts",
   "version": "1.0.0",
   "scripts": {
-    "try-sync-latest-mp-content": "deno run --env-file --allow-all src/biz/btnews/scripts/index.ts --task=try-sync-latest-mp-content"
+    "try-sync-latest-mp-content": "deno run --env-file --allow-all scripts/btnews/scripts/index.ts --task=try-sync-latest-mp-content"
   },
   "dependencies": {
     "@actions/core": "^1.11.1",
